@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'My Profile - Nekomi')
+@section('title', 'Мой профиль - Nekomi')
 
 @section('content')
 <div class="max-w-5xl mx-auto">
