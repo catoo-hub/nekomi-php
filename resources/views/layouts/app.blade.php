@@ -23,7 +23,7 @@
 </head>
 <body class="bg-zinc-950 text-zinc-50 antialiased selection:bg-blue-500 selection:text-white min-h-screen flex flex-col relative overflow-x-hidden">
 
-    <!-- Background Gradients -->
+    <!-- Gradients -->
     <div class="fixed inset-0 z-[-1] pointer-events-none">
         <div class="blob bg-blue-600 w-[500px] h-[500px] rounded-full top-[-10%] left-[-10%]"></div>
         <div class="blob bg-cyan-600 w-[400px] h-[400px] rounded-full bottom-[-10%] right-[-10%] animation-delay-2000"></div>
@@ -44,9 +44,9 @@
 
                 <!-- Desktop Nav -->
                 <div class="hidden md:flex items-center space-x-1">
-                    <a href="{{ url('/') }}" class="px-4 py-2 text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/5 rounded-md transition-all">Discover</a>
-                    <a href="#" class="px-4 py-2 text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/5 rounded-md transition-all">Trending</a>
-                    <a href="#" class="px-4 py-2 text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/5 rounded-md transition-all">Collections</a>
+                    <a href="{{ url('/') }}" class="px-4 py-2 text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/5 rounded-md transition-all">Обзор</a>
+                    <a href="{{ route('schedule.index') }}" class="px-4 py-2 text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/5 rounded-md transition-all">Расписание</a>
+                    <a href="{{ route('collections.index') }}" class="px-4 py-2 text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/5 rounded-md transition-all">Коллекции</a>
                 </div>
 
                 <!-- Right Side -->
@@ -58,7 +58,7 @@
                         </div>
                         <input type="text" name="q" value="{{ request('q') }}"
                             class="bg-zinc-900/50 border border-zinc-800 text-zinc-200 text-sm rounded-md focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 block w-64 pl-10 p-1.5 placeholder-zinc-500 transition-all focus:bg-zinc-900/80 outline-none" 
-                            placeholder="Search anime...">
+                            placeholder="Поиск аниме...">
                         <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                             <span class="text-xs border border-zinc-700 rounded px-1.5 py-0.5 text-zinc-500">⌘K</span>
                         </div>
@@ -67,10 +67,10 @@
                     <!-- Auth -->
                     <div class="flex items-center gap-2">
                         @auth
-                            <a href="{{ url('/profile') }}" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Profile</a>
+                            <a href="{{ url('/profile') }}" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Профиль</a>
                         @else
-                            <a href="{{ url('/login') }}" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors px-3 py-2">Log in</a>
-                            <a href="{{ url('/register') }}" class="text-sm font-medium bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40">Get Started</a>
+                            <a href="{{ url('/login') }}" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors px-3 py-2">Войти</a>
+                            <a href="{{ url('/register') }}" class="text-sm font-medium bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40">Регистрация</a>
                         @endauth
                     </div>
                 </div>
@@ -88,13 +88,13 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="flex items-center gap-2">
                 <div class="w-6 h-6 bg-gradient-to-br from-blue-500 to-cyan-600 rounded flex items-center justify-center text-white text-xs font-bold">N</div>
-                <span class="text-zinc-400 text-sm">© 2025 Nekomi Inc.</span>
+                <span class="text-zinc-400 text-sm">© 2025 Nekomi</span>
             </div>
             <div class="flex gap-6 text-sm text-zinc-500">
-                <a href="#" class="hover:text-blue-400 transition-colors">Privacy</a>
-                <a href="#" class="hover:text-blue-400 transition-colors">Terms</a>
-                <a href="#" class="hover:text-blue-400 transition-colors">Twitter</a>
-                <a href="#" class="hover:text-blue-400 transition-colors">Discord</a>
+                <a href="#" class="hover:text-blue-400 transition-colors">Политика конфиденциальности</a>
+                <a href="#" class="hover:text-blue-400 transition-colors">Условия</a>
+                <a href="#" class="hover:text-blue-400 transition-colors">Телеграмм</a>
+                <a href="#" class="hover:text-blue-400 transition-colors">Дискорд</a>
             </div>
         </div>
     </footer>

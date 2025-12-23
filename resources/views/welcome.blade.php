@@ -15,26 +15,26 @@
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                   <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                 </span>
-                New Episode Available
+                Новые эпизоды доступны
             </div>
             
             <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6 text-white">
-                Frieren: <br>
-                <span class="text-gradient">Beyond Journey's End</span>
+                Провожающая Фриерен: <br>
+                <span class="text-gradient">в последний путь</span>
             </h1>
             
             <p class="text-lg text-zinc-300 mb-8 leading-relaxed max-w-2xl drop-shadow-md">
-                The Demon King has been defeated, and the victorious hero party returns home before disbanding. Witness the journey that begins after the adventure ends.
+                Король демонов повержен, и победоносный отряд героев возвращается домой перед тем, как распуститься. Станьте свидетелем путешествия, которое начинается после окончания приключения.
             </p>
             
             <div class="flex flex-wrap gap-4">
                 <a href="{{ route('anime.show', ['id' => 'frieren']) }}" class="bg-white text-black hover:bg-zinc-200 px-8 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" /></svg>
-                    Watch S1 E1
+                    Смотреть S1 E1
                 </a>
                 <button class="glass hover:bg-white/10 text-white px-8 py-3 rounded-lg font-semibold transition-all flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    Add to List
+                    Добавить в избранное
                 </button>
             </div>
         </div>
@@ -43,17 +43,33 @@
     <!-- Filters & Heading -->
     <div class="flex flex-col md:flex-row justify-between items-end md:items-center mb-8 gap-4">
         <div>
-            <h2 class="text-3xl font-bold text-white tracking-tight">Trending Now</h2>
-            <p class="text-zinc-400 text-sm mt-1">Top rated anime this week</p>
+            <h2 class="text-3xl font-bold text-white tracking-tight">
+                @if(request('q'))
+                    Результаты поиска: "{{ request('q') }}"
+                @else
+                    Каталог аниме
+                @endif
+            </h2>
+            <p class="text-zinc-400 text-sm mt-1">
+                @if(request('q'))
+                    Найдено аниме по вашему запросу
+                @else
+                    Аниме под ваши предпочтения
+                @endif
+            </p>
         </div>
         
-        <form action="{{ route('home') }}" method="GET" class="flex flex-wrap gap-3">
+        <form action="{{ request()->url() }}" method="GET" class="flex flex-wrap gap-3">
+            @if(request('q'))
+                <input type="hidden" name="q" value="{{ request('q') }}">
+            @endif
+            
             <!-- Sort Filter -->
             <div class="relative">
                 <select name="sort" onchange="this.form.submit()" class="appearance-none glass-card text-zinc-300 rounded-lg pl-4 pr-10 py-2 text-sm focus:outline-none focus:border-blue-500/50 cursor-pointer hover:text-white transition-colors">
-                    <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Sort by: Newest</option>
-                    <option value="popular" {{ request('sort') == 'popular' ? 'selected' : '' }}>Sort by: Popular</option>
-                    <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>Sort by: Rating</option>
+                    <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Сортировать по: Новизне</option>
+                    <option value="popular" {{ request('sort') == 'popular' ? 'selected' : '' }}>Сортировать по: Популярности</option>
+                    <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>Сортировать по: Рейтингу</option>
                 </select>
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-zinc-500">
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -83,7 +99,7 @@
                     <div class="flex items-center justify-between text-xs text-zinc-500 mt-2">
                         <span class="flex items-center gap-1">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            {{ $anime['episodes_total'] ?? '?' }} eps
+                            {{ $anime['episodes_total'] ?? '?' }} эпизодов
                         </span>
                         <span class="border border-zinc-800 rounded px-1.5 py-0.5 text-zinc-400">{{ $anime['type']['description'] ?? 'TV' }}</span>
                     </div>
@@ -104,13 +120,13 @@
                     $nextPage = $currentPage < $totalPages ? $currentPage + 1 : null;
                 @endphp
                 
-                <a href="{{ $prevPage ? route('home', array_merge(request()->query(), ['page' => $prevPage])) : '#' }}" class="w-9 h-9 flex items-center justify-center rounded-md text-zinc-400 hover:bg-white/5 hover:text-white transition-all {{ !$prevPage ? 'pointer-events-none opacity-50' : '' }}">
+                <a href="{{ $prevPage ? request()->fullUrlWithQuery(['page' => $prevPage]) : '#' }}" class="w-9 h-9 flex items-center justify-center rounded-md text-zinc-400 hover:bg-white/5 hover:text-white transition-all {{ !$prevPage ? 'pointer-events-none opacity-50' : '' }}">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                 </a>
                 
                 <a href="#" class="w-9 h-9 flex items-center justify-center rounded-md bg-blue-600 text-white font-medium shadow-lg shadow-blue-500/20">{{ $currentPage }}</a>
                 
-                <a href="{{ $nextPage ? route('home', array_merge(request()->query(), ['page' => $nextPage])) : '#' }}" class="w-9 h-9 flex items-center justify-center rounded-md text-zinc-400 hover:bg-white/5 hover:text-white transition-all {{ !$nextPage ? 'pointer-events-none opacity-50' : '' }}">
+                <a href="{{ $nextPage ? request()->fullUrlWithQuery(['page' => $nextPage]) : '#' }}" class="w-9 h-9 flex items-center justify-center rounded-md text-zinc-400 hover:bg-white/5 hover:text-white transition-all {{ !$nextPage ? 'pointer-events-none opacity-50' : '' }}">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                 </a>
             @else
@@ -120,16 +136,56 @@
                     $nextPage = $currentPage + 1;
                 @endphp
                 
-                <a href="{{ route('home', array_merge(request()->query(), ['page' => $prevPage])) }}" class="w-9 h-9 flex items-center justify-center rounded-md text-zinc-400 hover:bg-white/5 hover:text-white transition-all {{ $currentPage == 1 ? 'pointer-events-none opacity-50' : '' }}">
+                <a href="{{ request()->fullUrlWithQuery(['page' => $prevPage]) }}" class="w-9 h-9 flex items-center justify-center rounded-md text-zinc-400 hover:bg-white/5 hover:text-white transition-all {{ $currentPage == 1 ? 'pointer-events-none opacity-50' : '' }}">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                 </a>
                 
                 <a href="#" class="w-9 h-9 flex items-center justify-center rounded-md bg-blue-600 text-white font-medium shadow-lg shadow-blue-500/20">{{ $currentPage }}</a>
                 
-                <a href="{{ route('home', array_merge(request()->query(), ['page' => $nextPage])) }}" class="w-9 h-9 flex items-center justify-center rounded-md text-zinc-400 hover:bg-white/5 hover:text-white transition-all">
+                <a href="{{ request()->fullUrlWithQuery(['page' => $nextPage]) }}" class="w-9 h-9 flex items-center justify-center rounded-md text-zinc-400 hover:bg-white/5 hover:text-white transition-all">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                 </a>
             @endif
         </nav>
     </div>
+
+    <!-- Schedule Section -->
+    @if(isset($schedule) && !empty($schedule))
+        <div class="mb-16">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-3xl font-bold text-white tracking-tight">Расписание выхода серий</h2>
+                <a href="{{ route('schedule.index') }}" class="text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1">
+                    Полное расписание
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                @foreach($schedule as $day)
+                    <div class="glass-card p-6 rounded-2xl">
+                        <h3 class="text-xl font-bold text-white mb-4 capitalize">{{ $day['day']['name'] ?? 'День' }}</h3>
+                        <div class="space-y-4">
+                            @if(isset($day['releases']))
+                                @foreach(array_slice($day['releases'], 0, 5) as $item)
+                                    <a href="{{ route('anime.show', ['id' => $item['id']]) }}" class="flex gap-4 group">
+                                        <div class="w-16 h-24 flex-shrink-0 overflow-hidden rounded-lg">
+                                            <img src="https://cdn.aniliberty.top{{ $item['poster']['optimized']['preview'] ?? $item['poster']['preview'] ?? '' }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform">
+                                        </div>
+                                        <div>
+                                            <h4 class="text-white font-medium text-sm group-hover:text-blue-400 transition-colors line-clamp-2">{{ $item['name']['main'] }}</h4>
+                                            <p class="text-zinc-500 text-xs mt-1">Новый эпизод: {{ $item['next_episode'] ?? '?' }}</p>
+                                        </div>
+                                    </a>
+                                @endforeach
+                                @if(count($day['releases']) > 5)
+                                    <div class="text-center pt-2">
+                                        <span class="text-xs text-zinc-500">и еще {{ count($day['releases']) - 5 }}...</span>
+                                    </div>
+                                @endif
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
 @endsection

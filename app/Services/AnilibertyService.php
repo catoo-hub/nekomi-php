@@ -31,8 +31,13 @@ class AnilibertyService
         return Http::get("{$this->baseUrl}/anime/releases/episodes/{$episodeId}")->json();
     }
     
-    public function search($query)
+    public function search($params = [])
     {
-        return Http::get("{$this->baseUrl}/app/search/releases", ['query' => $query])->json();
+        return Http::get("{$this->baseUrl}/anime/catalog/releases", $params)->json();
+    }
+
+    public function getSchedule()
+    {
+        return Http::get("{$this->baseUrl}/anime/schedule/week")->json();
     }
 }

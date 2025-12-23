@@ -17,6 +17,7 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $animeList = [];
+        $schedule = [];
         $params = [
             'limit' => 15,
             'page' => $request->get('page', 1),
@@ -29,9 +30,10 @@ class HomeController extends Controller
         if ($request->has('search')) {
             $params['f[search]'] = $request->get('search');
         }
-        
-        // Note: API might use different param names for filters, adjusting based on common patterns
-        // If the API documentation was available, we would use exact keys.
+
+        if ($request->has('q')) {
+            $params['f[search]'] = $request->get('q');
+        }
         
         $meta = [];
         try {
@@ -41,6 +43,34 @@ class HomeController extends Controller
             }
             if (isset($response['meta'])) {
                 $meta = $response['meta'];
+            }
+
+            // Fetch Schedule
+            $scheduleData = $this->aniliberty->getSchedule();
+            if (is_array($scheduleData)) {
+                $groupedSchedule = [];
+                foreach ($scheduleData as $item) {
+                    if (isset($item['release']['publish_day'])) {
+                        $dayValue = $item['release']['publish_day']['value'];
+                        $dayName = $item['release']['publish_day']['description'];
+                        
+                        if (!isset($groupedSchedule[$dayValue])) {
+                            $groupedSchedule[$dayValue] = [
+                                'day' => ['name' => $dayName, 'value' => $dayValue],
+                                'releases' => []
+                            ];
+                        }
+                        
+                        // Add the release to the list, using the release object directly as the view expects
+                        $release = $item['release'];
+                        $release['next_episode'] = $item['next_release_episode_number'] ?? null;
+                        $groupedSchedule[$dayValue]['releases'][] = $release;
+                    }
+                }
+                
+                // Sort by day value (1-7)
+                ksort($groupedSchedule);
+                $schedule = array_values($groupedSchedule);
             }
         } catch (\Exception $e) {
             // Log error if needed
@@ -60,25 +90,39 @@ class HomeController extends Controller
             }
         }
 
-        return view('welcome', compact('animeList', 'meta'));
+        return view('welcome', compact('animeList', 'meta', 'schedule'));
     }
 
     public function search(Request $request)
     {
-        $query = $request->get('q');
         $animeList = [];
+        $schedule = [];
+        $params = [
+            'limit' => 15,
+            'page' => $request->get('page', 1),
+        ];
 
-        if ($query) {
-            try {
-                $response = $this->aniliberty->search($query);
-                if (isset($response['data'])) {
-                    $animeList = $response['data'];
-                }
-            } catch (\Exception $e) {
-                // Handle error
-            }
+        if ($request->has('sort')) {
+            $params['f[sorting]'] = $request->get('sort');
         }
 
-        return view('welcome', compact('animeList'));
+        if ($request->has('q')) {
+            $params['f[search]'] = $request->get('q');
+        }
+        
+        $meta = [];
+        try {
+            $response = $this->aniliberty->search($params);
+            if (isset($response['data'])) {
+                $animeList = $response['data'];
+            }
+            if (isset($response['meta'])) {
+                $meta = $response['meta'];
+            }
+        } catch (\Exception $e) {
+            // Log error if needed
+        }
+
+        return view('welcome', compact('animeList', 'meta', 'schedule'));
     }
 }

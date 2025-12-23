@@ -27,7 +27,7 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+            'email' => 'Данные для входа неверны.',
         ])->onlyInput('email');
     }
 
@@ -51,6 +51,16 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
+
+        return redirect('/');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect('/');
     }
