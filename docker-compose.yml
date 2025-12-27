@@ -32,10 +32,10 @@ services:
     container_name: nekomi-db
     restart: always
     environment:
-      MYSQL_DATABASE: nekomi
-      MYSQL_USER: nekomi
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: nekomi
+      MARIADB_USER: nekomi
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
     volumes:
       - db_data:/var/lib/mysql
     networks:
