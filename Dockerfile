@@ -8,7 +8,7 @@ COPY public ./public
 COPY . .
 RUN npm run build
 
-FROM serversideup/php:8.3-fpm-nginx AS production
+FROM serversideup/php:8.4-fpm-nginx AS production
 
 ENV PHP_OPCACHE_ENABLE=1
 
