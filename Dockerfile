@@ -24,7 +24,14 @@ COPY --from=node_build --chown=www-data:www-data /app/public/build ./public/buil
 USER www-data
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Права на запись (хотя serversideup обычно это обрабатывает, перестрахуемся)
+# Создаем структуру папок storage, так как они игнорируются в .dockerignore
 USER root
-RUN chmod -R 775 storage bootstrap/cache
+RUN mkdir -p storage/framework/views \
+    storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/testing \
+    storage/logs \
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
+
 USER www-data
