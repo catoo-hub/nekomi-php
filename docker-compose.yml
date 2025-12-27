@@ -13,7 +13,7 @@ services:
       DB_PORT: 3306
       DB_DATABASE: nekomi
       DB_USERNAME: nekomi
-      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PASSWORD: ${DB_PASSWORD:-secret}
       # Настройки для образа serversideup
       AUTORUN_ENABLED: "true"
       AUTORUN_LARAVEL_MIGRATION: "true"
@@ -34,7 +34,7 @@ services:
     environment:
       MARIADB_DATABASE: nekomi
       MARIADB_USER: nekomi
-      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-secret}
       MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
     volumes:
       - db_data:/var/lib/mysql
