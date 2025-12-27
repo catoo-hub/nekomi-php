@@ -54,10 +54,15 @@ services:
       DB_DATABASE: nekomi
       DB_USERNAME: nekomi
       DB_PASSWORD: secret
+      # Ждем пока миграции пройдут в основном контейнере
+      AUTORUN_ENABLED: "false"
     networks:
       - internal
     depends_on:
-      - db
+      app:
+        condition: service_started
+      db:
+        condition: service_started
 
 networks:
   # Эта сеть должна быть создана вручную или в конфиге Astro
